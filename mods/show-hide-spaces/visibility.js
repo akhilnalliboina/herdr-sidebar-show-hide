@@ -110,11 +110,6 @@ export class Visibility {
       .text_size(11)
       .text_color(t.dim)
       .hover((s) => s.bg(t.hover).text_color(t.foreground))
-      /**
-       * Revealed: accent text on a faint accent tint. A solid accent block drew the eye away from
-       * the rows while working in a dimmed space; the tint still says hidden rows are on screen.
-       */
-      .when(this.revealed() && count > 0, (el) => el.text_color(t.accent).bg(t.accent + "1f").hover((s) => s.bg(t.accent + "38").text_color(t.accent)))
       .tooltip(this.revealed() && count ? `${count} hidden rows are shown for a look. Turn that off with the reveal key.` : count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
       .on_click((_e, cx) => {
         this.start();

@@ -21,8 +21,7 @@ what you do not need, then save, or discard to undo.
   a minute.
 - **Peek at hidden rows.** The `reveal` command shows every hidden space and
   agent, dimmed, without starting show/hide mode. Run it again to hide them.
-  It works for both lists at once. While hidden rows show, the header button
-  gets a light accent tint.
+  It works for both lists at once.
 - **Keys:** bind them in `keys.json`, for example:
 
   ```json

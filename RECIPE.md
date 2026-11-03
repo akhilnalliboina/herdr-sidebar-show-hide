@@ -30,6 +30,9 @@ them again, and the header says how many are hidden.
   mode started.
 - Hiding a main checkout hides its worktree spaces too; showing it brings them
   back. Their own eyes are locked while the checkout is hidden.
+- Hiding a space hides the agents in it too. Their eyes are locked, with the
+  tooltip "Hidden with its space", until the space is shown again. The agents
+  mod reads the spaces mod's hidden list, so without that mod nothing changes.
 - A hidden space disappears from the list even when it is the space you are in.
 - A hidden agent with status `blocked` (it needs you) is listed again until it
   is answered. Hidden agents are left out of the agent order, so
@@ -40,8 +43,8 @@ them again, and the header says how many are hidden.
   `show-hide-agents.visibility` start show/hide mode, or save it when it is on.
   `show-hide-agents.reveal` (or `show-hide-spaces.reveal`) shows the hidden
   rows of both lists, dimmed, and hides them again on the next press. While
-  they show, the header button turns `accent` with `accent_foreground` text and
-  an open eye, so it is clear that hidden rows are on screen.
+  they show, the header button keeps its plain look with an open eye, so the
+  icon alone says that hidden rows are on screen.
 
 ## Built from
 
