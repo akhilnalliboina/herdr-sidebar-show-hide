@@ -50,11 +50,13 @@ export function tone(t, status) {
 export default class Spaces extends View {
   init(_props, cx) {
     this.visibility = new Visibility(HIDDEN_KEY, "mods/show-hide-spaces");
-    /** "show-hide-spaces.visibility" (a key in keys.json, or `herdr-app do`) starts or saves show/hide mode. */
+    /** "show-hide-spaces.visibility" starts or saves show/hide mode; ".reveal" shows hidden rows in both lists, or hides them again. Bind them in keys.json. */
     if (!props()?.sortMenu) cx.spawn(async (cx) => {
       for (;;) {
-        if ((await nextCommand()) !== "visibility") continue;
-        this.visibility.editing ? this.visibility.save() : this.visibility.start();
+        const command = await nextCommand();
+        if (command === "reveal") this.visibility.toggleReveal();
+        else if (command === "visibility") this.visibility.editing ? this.visibility.save() : this.visibility.start();
+        else continue;
         cx.notify();
       }
     });
@@ -303,7 +305,7 @@ export default class Spaces extends View {
       }
     }
     /** The space you are in stays listed even when hidden, so the selection never disappears. */
-    const rows = this.ordered().filter((r) => vis.editing || !hidden.has(r.w.id) || r.w.active);
+    const rows = this.ordered().filter((r) => vis.showsHidden() || !hidden.has(r.w.id) || r.w.active);
     const draw = (r) => (collapsed ? this.compact(r, t) : this.row(r, t));
     const remote = [...new Set([...rows.map(r => r.w.machine).filter(Boolean), ...this.machines.map(m => m.name), ...Object.keys(this.reconnecting)])].sort();
     const loading = m => {
@@ -426,7 +428,7 @@ export default class Spaces extends View {
           .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1())
           .when(this.visibility.editing, (el) => el.child(this.visibility.rowToggle(t, w.id, this.eyes[w.id] ?? {}))),
       )
-      .when(this.visibility.editing && this.visibility.hidden().has(w.id), (el) => el.opacity(0.5));
+      .when(this.visibility.showsHidden() && this.visibility.hidden().has(w.id), (el) => el.opacity(0.5));
   }
 
   compact({ w, i }, t) {

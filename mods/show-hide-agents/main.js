@@ -73,11 +73,13 @@ function icon(p, size, color) {
 export default class Agents extends View {
   init(_props, cx) {
     this.visibility = new Visibility(HIDDEN_KEY, "mods/show-hide-agents");
-    /** "show-hide-agents.visibility" (a key in keys.json, or `herdr-app do`) starts or saves show/hide mode. */
+    /** "show-hide-agents.visibility" starts or saves show/hide mode; ".reveal" shows hidden rows in both lists, or hides them again. Bind them in keys.json. */
     if (!props()?.sortMenu) cx.spawn(async (cx) => {
       for (;;) {
-        if ((await nextCommand()) !== "visibility") continue;
-        this.visibility.editing ? this.visibility.save() : this.visibility.start();
+        const command = await nextCommand();
+        if (command === "reveal") this.visibility.toggleReveal();
+        else if (command === "visibility") this.visibility.editing ? this.visibility.save() : this.visibility.start();
+        else continue;
         cx.notify();
       }
     });
@@ -238,7 +240,7 @@ export default class Agents extends View {
     vis.prune(new Set(all.map((k) => k.address)));
     /** A hidden agent that needs you comes back until you answer it, so a question is never missed. */
     const hiddenCount = list.filter((a) => hidden.has(a.address)).length;
-    if (!vis.editing) list = list.filter((a) => !hidden.has(a.address) || a.status === "blocked");
+    if (!vis.showsHidden()) list = list.filter((a) => !hidden.has(a.address) || a.status === "blocked");
     this.migratePins(all);
     const shown = focused()?.agent;
     const now = Date.now();
@@ -372,7 +374,7 @@ export default class Agents extends View {
         .when(Boolean(machine), el => el.child(div().text_size(10).text_color(t.dim).child(machine)))
         .when(subs.length > 0, el => el.child(fold(a, subs)))
         .when(vis.editing, el => el.child(vis.rowToggle(t, a.address)))
-        .when(vis.editing && hidden.has(a.address), el => el.opacity(0.5))
+        .when(vis.showsHidden() && hidden.has(a.address), el => el.opacity(0.5))
         .when(!vis.editing && this.hovered === a.address, el => el.child(pin))
         .when(!vis.editing && this.hovered !== a.address && Boolean(when), el => el.child(div().flex_none().text_size(11).text_color(t.dim).child(duration(now - when))))
         .child(this.status(t, a, byPriority && !isPinned));

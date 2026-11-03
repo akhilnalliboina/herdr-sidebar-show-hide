@@ -38,6 +38,9 @@ them again, and the header says how many are hidden.
   or space id that has been missing for a minute is dropped from its list.
 - Key commands: `show-hide-spaces.visibility` and
   `show-hide-agents.visibility` start show/hide mode, or save it when it is on.
+  `show-hide-agents.reveal` (or `show-hide-spaces.reveal`) shows the hidden
+  rows of both lists, dimmed, and hides them again on the next press. While
+  they show, the header eye has a `hover` background and `foreground` color.
 
 ## Built from
 
@@ -50,6 +53,9 @@ them again, and the header says how many are hidden.
 - Shared values: `show-hide.spaces.hidden` (space ids) and
   `show-hide.agents.hidden` (terminal addresses), read with `shared` and
   written with `setShared`.
+- `show-hide.reveal` is one shared on/off value for both lists, so one key
+  reveals both. `Visibility.showsHidden()` is true in show/hide mode or while
+  revealed; the filters and the 50% opacity use it.
 - Changes in the Spaces `main.js`: `grouped()` works out which worktree rows
   belong to which main checkout, then filters hidden rows unless the mode is
   on or the space is active. `row()` adds the eye and the 50% opacity.
@@ -89,3 +95,5 @@ them again, and the header says how many are hidden.
 - Hiding a main checkout hides its worktrees and locks their eyes.
 - A hidden agent that turns `blocked` appears again.
 - Hidden rows stay hidden after Herdr restarts.
+- Running `show-hide-agents.reveal` lists the hidden agents and spaces dimmed;
+  running it again hides them.

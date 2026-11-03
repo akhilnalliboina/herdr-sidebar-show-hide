@@ -1,7 +1,7 @@
 import { div, svg } from "gpui-kit";
 import { h_flex } from "gpui-base";
 import { shared, setShared } from "herdr";
-import { PRUNE_AFTER_MS } from "./constants.js";
+import { PRUNE_AFTER_MS, REVEAL_KEY } from "./constants.js";
 
 /**
  * Show/hide mode for a sidebar list: an eye in
@@ -20,6 +20,20 @@ export class Visibility {
 
   hidden() {
     return new Set(shared(this.key) ?? []);
+  }
+
+  /** True while hidden rows are shown for a look, without show/hide mode. */
+  revealed() {
+    return Boolean(shared(REVEAL_KEY));
+  }
+
+  toggleReveal() {
+    setShared(REVEAL_KEY, !this.revealed());
+  }
+
+  /** Hidden rows are listed (dimmed) in show/hide mode and while revealed. */
+  showsHidden() {
+    return this.editing || this.revealed();
   }
 
   start() {
@@ -94,7 +108,8 @@ export class Visibility {
       .text_size(11)
       .text_color(t.dim)
       .hover((s) => s.bg(t.hover).text_color(t.foreground))
-      .tooltip(count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
+      .when(this.revealed() && count > 0, (el) => el.text_color(t.foreground).bg(t.hover))
+      .tooltip(this.revealed() && count ? `${count} hidden rows are shown. Show or hide rows` : count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
       .on_click((_e, cx) => {
         this.start();
         cx.notify();

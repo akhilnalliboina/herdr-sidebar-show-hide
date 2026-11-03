@@ -17,8 +17,18 @@ what you do not need, then save, or discard to undo.
   that needs you shows up again until you answer it.
 - **Survives restarts.** Agents that are closed drop off the hidden list after
   a minute.
-- **Keys:** bind `show-hide-spaces.visibility` and
-  `show-hide-agents.visibility` in `keys.json` to start or save the mode.
+- **Peek at hidden rows.** The `reveal` command shows every hidden space and
+  agent, dimmed, without starting show/hide mode. Run it again to hide them.
+  It works for both lists at once.
+- **Keys:** bind them in `keys.json`, for example:
+
+  ```json
+  "global": {
+    "cmd-shift-h": "show-hide-agents.reveal",
+    "cmd-alt-shift-a": "show-hide-agents.visibility",
+    "cmd-alt-shift-s": "show-hide-spaces.visibility"
+  }
+  ```
 
 ## Install
 
