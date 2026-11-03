@@ -4,7 +4,7 @@ Hide the spaces and agents you do not want to see in Herdr's sidebar. Each
 list gets an eye in its header. Click it, and every row gets its own eye: hide
 what you do not need, then save, or discard to undo.
 
-![Sidebar show/hide: normal, revealed, and show/hide mode](preview.png)
+![Spaces and Agents, each normal, revealed and in show/hide mode](preview.png)
 
 ## What it does
 
