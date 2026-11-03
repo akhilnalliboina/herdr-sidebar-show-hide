@@ -304,8 +304,7 @@ export default class Spaces extends View {
         this.eyes[r.w.id] = { cascade: [], locked: hidden.has(parent) };
       }
     }
-    /** The space you are in stays listed even when hidden, so the selection never disappears. */
-    const rows = this.ordered().filter((r) => vis.showsHidden() || !hidden.has(r.w.id) || r.w.active);
+    const rows = this.ordered().filter((r) => vis.showsHidden() || !hidden.has(r.w.id));
     const draw = (r) => (collapsed ? this.compact(r, t) : this.row(r, t));
     const remote = [...new Set([...rows.map(r => r.w.machine).filter(Boolean), ...this.machines.map(m => m.name), ...Object.keys(this.reconnecting)])].sort();
     const loading = m => {

@@ -108,13 +108,14 @@ export class Visibility {
       .text_size(11)
       .text_color(t.dim)
       .hover((s) => s.bg(t.hover).text_color(t.foreground))
-      .when(this.revealed() && count > 0, (el) => el.text_color(t.foreground).bg(t.hover))
-      .tooltip(this.revealed() && count ? `${count} hidden rows are shown. Show or hide rows` : count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
+      .when(this.revealed() && count > 0, (el) => el.text_color(t.accent_foreground).bg(t.accent).hover((s) => s.bg(t.accent).text_color(t.accent_foreground)))
+      .tooltip(this.revealed() && count ? `${count} hidden rows are shown for a look. Turn that off with the reveal key.` : count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
       .on_click((_e, cx) => {
         this.start();
         cx.notify();
       })
-      .child(svg(`${this.folder}/${count ? "eye-off" : "eye"}.svg`).size(13))
+      /** While hidden rows are shown, the open eye says they are on screen now. */
+      .child(svg(`${this.folder}/${count && !this.revealed() ? "eye-off" : "eye"}.svg`).size(13))
       .when(count > 0, (el) => el.child(String(count)));
   }
 

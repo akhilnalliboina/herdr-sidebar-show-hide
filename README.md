@@ -13,8 +13,8 @@ what you do not need, then save, or discard to undo.
 - **A count in the header** shows how many rows are hidden.
 - **Worktrees follow their checkout.** Hiding a main checkout hides its
   worktree spaces too.
-- **Nothing gets lost.** The space you are in stays listed, and a hidden agent
-  that needs you shows up again until you answer it.
+- **Nothing gets lost.** A hidden agent that needs you shows up again until
+  you answer it.
 - **Survives restarts.** Agents that are closed drop off the hidden list after
   a minute.
 - **Peek at hidden rows.** The `reveal` command shows every hidden space and

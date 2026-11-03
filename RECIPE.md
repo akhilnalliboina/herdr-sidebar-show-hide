@@ -30,7 +30,7 @@ them again, and the header says how many are hidden.
   mode started.
 - Hiding a main checkout hides its worktree spaces too; showing it brings them
   back. Their own eyes are locked while the checkout is hidden.
-- The space you are in stays listed even when it is hidden.
+- A hidden space disappears from the list even when it is the space you are in.
 - A hidden agent with status `blocked` (it needs you) is listed again until it
   is answered. Hidden agents are left out of the agent order, so
   `agent.next` and `agent.prev` skip them.
@@ -40,7 +40,8 @@ them again, and the header says how many are hidden.
   `show-hide-agents.visibility` start show/hide mode, or save it when it is on.
   `show-hide-agents.reveal` (or `show-hide-spaces.reveal`) shows the hidden
   rows of both lists, dimmed, and hides them again on the next press. While
-  they show, the header eye has a `hover` background and `foreground` color.
+  they show, the header button turns `accent` with `accent_foreground` text and
+  an open eye, so it is clear that hidden rows are on screen.
 
 ## Built from
 
@@ -58,7 +59,7 @@ them again, and the header says how many are hidden.
   revealed; the filters and the 50% opacity use it.
 - Changes in the Spaces `main.js`: `grouped()` works out which worktree rows
   belong to which main checkout, then filters hidden rows unless the mode is
-  on or the space is active. `row()` adds the eye and the 50% opacity.
+  on or hidden rows are revealed. `row()` adds the eye and the 50% opacity.
   `render()` swaps the header.
 - Changes in the Agents `main.js`: `render()` filters hidden agents (except
   blocked ones) before grouping and before `setAgentOrder`, prunes against
