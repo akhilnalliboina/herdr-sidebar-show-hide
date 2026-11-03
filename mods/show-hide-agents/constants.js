@@ -9,3 +9,6 @@ export const PRUNE_AFTER_MS = 60000;
  * Spaces and Agents together, so it lives outside either list's hidden key.
  */
 export const REVEAL_KEY = "show-hide.reveal";
+
+/** The Spaces list's hidden ids: an agent in a hidden space is hidden with it. Empty without that mod. */
+export const SPACES_HIDDEN_KEY = "show-hide.spaces.hidden";

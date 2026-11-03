@@ -75,8 +75,10 @@ export class Visibility {
   }
 
   /** The eye at the end of a row. A row under a hidden parent shows it but cannot change. */
-  rowToggle(t, id, { cascade = [], locked = false } = {}) {
-    const off = this.hidden().has(id);
+  /** `forced`: hidden by something else (its space), so the eye shows off and is locked. */
+  rowToggle(t, id, { cascade = [], locked = false, forced = false, why = "Hidden with the row above" } = {}) {
+    const off = forced || this.hidden().has(id);
+    locked = locked || forced;
     return div()
       .id(`eye-${id}`)
       .flex_none()
@@ -84,7 +86,7 @@ export class Visibility {
       .rounded(4)
       .text_color(locked ? t.dim + "80" : off ? t.dim : t.muted)
       .when(!locked, (el) => el.cursor_pointer().hover((s) => s.bg(t.hover).text_color(t.foreground)))
-      .tooltip(locked ? "Hidden with the row above" : off ? "Show" : "Hide")
+      .tooltip(locked ? why : off ? "Show" : "Hide")
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => {
         cx.stop_propagation();
@@ -108,7 +110,11 @@ export class Visibility {
       .text_size(11)
       .text_color(t.dim)
       .hover((s) => s.bg(t.hover).text_color(t.foreground))
-      .when(this.revealed() && count > 0, (el) => el.text_color(t.accent_foreground).bg(t.accent).hover((s) => s.bg(t.accent).text_color(t.accent_foreground)))
+      /**
+       * Revealed: accent text on a faint accent tint. A solid accent block drew the eye away from
+       * the rows while working in a dimmed space; the tint still says hidden rows are on screen.
+       */
+      .when(this.revealed() && count > 0, (el) => el.text_color(t.accent).bg(t.accent + "1f").hover((s) => s.bg(t.accent + "38").text_color(t.accent)))
       .tooltip(this.revealed() && count ? `${count} hidden rows are shown for a look. Turn that off with the reveal key.` : count ? `Show or hide rows (${count} hidden)` : "Show or hide rows")
       .on_click((_e, cx) => {
         this.start();

@@ -13,13 +13,16 @@ what you do not need, then save, or discard to undo.
 - **A count in the header** shows how many rows are hidden.
 - **Worktrees follow their checkout.** Hiding a main checkout hides its
   worktree spaces too.
+- **Agents follow their space.** Hiding a space hides the agents in it, and
+  their eye is locked until you show the space again.
 - **Nothing gets lost.** A hidden agent that needs you shows up again until
   you answer it.
 - **Survives restarts.** Agents that are closed drop off the hidden list after
   a minute.
 - **Peek at hidden rows.** The `reveal` command shows every hidden space and
   agent, dimmed, without starting show/hide mode. Run it again to hide them.
-  It works for both lists at once.
+  It works for both lists at once. While hidden rows show, the header button
+  gets a light accent tint.
 - **Keys:** bind them in `keys.json`, for example:
 
   ```json

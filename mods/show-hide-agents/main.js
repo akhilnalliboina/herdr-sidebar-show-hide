@@ -5,7 +5,7 @@ import { View, div, image, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout, nextCommand } from "herdr";
 import { Visibility } from "./visibility.js";
-import { HIDDEN_KEY } from "./constants.js";
+import { HIDDEN_KEY, SPACES_HIDDEN_KEY } from "./constants.js";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -237,10 +237,13 @@ export default class Agents extends View {
     const all = terminals();
     const vis = this.visibility;
     const hidden = vis.hidden();
+    /** Hiding a space hides its agents too; showing the space brings them back with it. */
+    const hiddenSpaces = new Set(shared(SPACES_HIDDEN_KEY) ?? []);
+    const isHidden = (a) => hidden.has(a.address) || hiddenSpaces.has(a.space);
     vis.prune(new Set(all.map((k) => k.address)));
     /** A hidden agent that needs you comes back until you answer it, so a question is never missed. */
-    const hiddenCount = list.filter((a) => hidden.has(a.address)).length;
-    if (!vis.showsHidden()) list = list.filter((a) => !hidden.has(a.address) || a.status === "blocked");
+    const hiddenCount = list.filter(isHidden).length;
+    if (!vis.showsHidden()) list = list.filter((a) => !isHidden(a) || a.status === "blocked");
     this.migratePins(all);
     const shown = focused()?.agent;
     const now = Date.now();
@@ -373,8 +376,8 @@ export default class Agents extends View {
           .when(full && Boolean(more), el => el.child(div().flex_1().min_w(0).truncate().text_color(t.dim).child(`\u00b7 ${more}`))))
         .when(Boolean(machine), el => el.child(div().text_size(10).text_color(t.dim).child(machine)))
         .when(subs.length > 0, el => el.child(fold(a, subs)))
-        .when(vis.editing, el => el.child(vis.rowToggle(t, a.address)))
-        .when(vis.showsHidden() && hidden.has(a.address), el => el.opacity(0.5))
+        .when(vis.editing, el => el.child(vis.rowToggle(t, a.address, { forced: hiddenSpaces.has(a.space), why: "Hidden with its space" })))
+        .when(vis.showsHidden() && isHidden(a), el => el.opacity(0.5))
         .when(!vis.editing && this.hovered === a.address, el => el.child(pin))
         .when(!vis.editing && this.hovered !== a.address && Boolean(when), el => el.child(div().flex_none().text_size(11).text_color(t.dim).child(duration(now - when))))
         .child(this.status(t, a, byPriority && !isPinned));
